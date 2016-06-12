@@ -3,39 +3,31 @@ class TeleCoffeHandler:
 
     def __init__(self):
         # Initialize the handler to connect with the DB.
-        # initORMHandler is a function in this class that is not included 
+        # initORMHandler is a function in this class that is not included
         # cause it is not in the scope of this kata.
         self.mORMHandler = initORMHandler()
 
         # Initialize the handler to connect with the payment system
-        # initWalletHandler is a function in this class that is not included 
+        # initWalletHandler is a function in this class that is not included
         # cause it is not in the scope of this kata.
         self.mWalletHandler = initWalletHandler()
 
-    def getBravasUnit():
-        self.mORMHandler.checkEnoughExistences('bravas', 1)
-        bravasPrize = self.mORMHandler.getPrize('bravas')
-        self.mWalletHandler.checkEnoughMoney(bravasPrize)
-        self.mWalletHandler.spendMoney(bravasPrize)
-        return self.mORMHandler.get('bravas', 1)
+    def getFood(foodType, foodPack):
+        if not isinstance (foodType, FoodType):
+            raise ValueError('foodType not valid')
+        if not isinstance (foodPack, FoodPack):
+            raise ValueError('foodPack not valid')
 
-    def getBravasPack():
-        self.mORMHandler.checkEnoughExistences('bravas', 5)
-        bravasPrize = self.mORMHandler.getPrize('bravas')
-        self.mWalletHandler.checkEnoughMoney(bravasPrize * 5)
-        self.mWalletHandler.spendMoney(bravasPrize * 5)
-        return self.mORMHandler.get('bravas', 5)
+        self.mORMHandler.checkEnoughExistences(foodType.value, foodPack.value)
+        foodPrize = self.mORMHandler.getPrize(foodType.value)
+        self.mWalletHandler.checkEnoughMoney(foodPrize)
+        self.mWalletHandler.spendMoney(foodPrize)
+        return self.mORMHandler.get(foodType.value, foodPack.value)
 
-    def getPechuguitoUnit():
-        self.mORMHandler.checkEnoughExistences('pechuguito', 1)
-        pechuguitoPrize = self.mORMHandler.getPrize('pechuguito')
-        self.mWalletHandler.checkEnoughMoney(pechuguitoPrize)
-        self.mWalletHandler.spendMoney(pechuguitoPrize)
-        return self.mORMHandler.get('pechuguito', 1)
+class FoodType(Enum):
+    BRAVAS = 'bravas'
+    PECHUGUITO = 'pechuguito'
 
-    def getPechuguitoPack():
-        self.mORMHandler.checkEnoughExistences('pechuguito', 5)
-        pechuguitoPrize = self.mORMHandler.getPrize('pechuguito')
-        self.mWalletHandler.checkEnoughMoney(pechuguitoPrize * 5)
-        self.mWalletHandler.spendMoney(pechuguitoPrize * 5)
-        return self.mORMHandler.get('pechuguito', 5)
+class FoodPack(Enum):
+    UNIT = 1
+    PACK = 5
